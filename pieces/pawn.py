@@ -1,0 +1,30 @@
+from .piece import Piece
+
+class Pawn(Piece):
+    def __init__(self, color, x, y, name=None):
+        super().__init__(color, x, y, name)
+        self.first_move = True
+
+    def is_valid_move(self, new_x, new_y, board):
+        # Il reste la prise en passant à implémenter
+
+        d_x = self.x - new_x
+        d_y = self.y - new_y
+
+        direction = 1 if self.color == 'white' else -1
+
+        # Avancer le pion de 1
+        if d_x == 1 * direction and new_y == self.y and board[new_x][new_y] == '.':
+            return True
+
+        # Avancer le pion de 2 si c'est le premier coup et qu'il n'y a pas de pièce sur la case intermédiaire
+        elif d_x == 2 * direction and new_y == self.y and board[new_x][new_y] == '.' and self.first_move and board[new_x + direction][new_y] == '.':
+            self.first_move = False
+            return True
+        # Manger en diagonale si la nouvelle case n'est pas vide PUIS vérifier que la pièce est de couleur différente sinon erreur
+        elif d_x == 1 * direction and (abs(d_y) == 1) and board[new_x][new_y] != '.' and self.color != board[new_x][new_y].color:
+            return True
+
+        return False
+
+
