@@ -6,8 +6,8 @@ class Rook(Piece):
 
     def is_valid_move(self, new_x, new_y, board):
         def clear_path():
-            dx = self.x - new_x
-            dy = self.y - new_y
+            dx = new_x - self.x
+            dy = new_y - self.y
 
             mouvement = self.x if dy == 0 else self.y
             index = dx if dy == 0 else dy
