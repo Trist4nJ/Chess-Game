@@ -12,18 +12,19 @@ class Pawn(Piece):
         d_y = self.y - new_y
 
         direction = 1 if self.color == 'white' else -1
+        if 0 <= new_x <= 7 and 0 <= new_y <= 7:
+            # Avancer le pion de 1
+            if d_x == 1 * direction and new_y == self.y and board[new_x][new_y] == '.':
+                return True
 
-        # Avancer le pion de 1
-        if d_x == 1 * direction and new_y == self.y and board[new_x][new_y] == '.':
-            return True
+            # Avancer le pion de 2 si c'est le premier coup et qu'il n'y a pas de pièce sur la case intermédiaire
+            elif d_x == 2 * direction and new_y == self.y and board[new_x][new_y] == '.' and self.first_move and board[new_x + direction][new_y] == '.':
+                self.first_move = False
+                return True
 
-        # Avancer le pion de 2 si c'est le premier coup et qu'il n'y a pas de pièce sur la case intermédiaire
-        elif d_x == 2 * direction and new_y == self.y and board[new_x][new_y] == '.' and self.first_move and board[new_x + direction][new_y] == '.':
-            self.first_move = False
-            return True
-        # Manger en diagonale si la nouvelle case n'est pas vide PUIS vérifier que la pièce est de couleur différente sinon erreur
-        elif d_x == 1 * direction and (abs(d_y) == 1) and board[new_x][new_y] != '.' and self.color != board[new_x][new_y].color:
-            return True
+            # Manger en diagonale si la nouvelle case n'est pas vide PUIS vérifier que la pièce est de couleur différente sinon erreur
+            elif d_x == 1 * direction and (abs(d_y) == 1) and board[new_x][new_y] != '.' and self.color != board[new_x][new_y].color:
+                return True
 
         return False
 

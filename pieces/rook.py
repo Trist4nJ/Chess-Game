@@ -31,7 +31,8 @@ class Rook(Piece):
                 return False
 
             elif self.x == new_x or self.y == new_y:
-                if (board[new_x][new_y] == '.' or board[new_x][new_y].color != self.color) and clear_path():
+                destination = board[new_x][new_y]
+                if (destination == '.' or destination.color != self.color) and clear_path():
                     return True
 
         return False
