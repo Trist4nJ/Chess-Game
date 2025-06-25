@@ -5,9 +5,6 @@ class King(Piece):
         super().__init__(color, x, y, name)
 
     def is_valid_move(self, new_x, new_y, board):
-        def is_safe():
-            pass
-
         moves = []
 
         for dx in [-1, 0, 1]:
@@ -20,7 +17,8 @@ class King(Piece):
         dx = new_x - self.x
         dy = new_y - self.y
 
-        if (dx, dy) in moves and (destination == '.' or destination.color != self.color) and is_safe():
-            return True
+        if (dx, dy) in moves and (destination == '.' or destination.color != self.color):
+            if not board.is_square_attacked(new_x, new_y, self.color):
+                return True
 
         return False

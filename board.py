@@ -5,7 +5,6 @@ class Board:
     def __init__(self):
         self.board = []
         self.init_board()
-        self.print_board()
 
     def init_board(self):
         self.board = [['.' for _ in range(8)] for _ in range(8)]
@@ -50,3 +49,10 @@ class Board:
            piece.x = new_x
            piece.y = new_y
 
+    def is_square_attacked(self, x, y, color):
+        for row in self.board:
+            for piece in row:
+                if piece != '.' and piece.color != color:
+                    if piece.is_valid_move(x, y, self.board):
+                        return True
+        return False

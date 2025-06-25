@@ -1,0 +1,90 @@
+♟ Official Chess Rules – Complete Version
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+📌 Object of the Game
+The goal is to checkmate your opponent’s king, meaning the king is under attack (in check) and there is no legal move to escape the threat.
+
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+🧱 The Board
+The game is played on an 8x8 square board.
+Each player starts with 16 pieces:
+1 King 👑
+1 Queen 👸
+2 Rooks 🏰
+2 Bishops ⛪
+2 Knights ♞
+8 Pawns ♟
+The board is positioned so that each player has a white/light square on their right.
+
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+🔄 Turns
+White always moves first, then players alternate turns.
+You must make a move on your turn. Skipping a turn is not allowed.
+
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+🧩 Piece Movement
+
+👑 King
+Moves one square in any direction (horizontal, vertical, diagonal).
+Cannot move into or through a square that is under attack.
+Special move: Castling (see below).
+
+👸 Queen
+Moves any number of squares in any direction (like rook + bishop).
+Cannot jump over pieces.
+
+🏰 Rook
+Moves any number of squares vertically or horizontally.
+Special move: Castling (see below).
+
+⛪ Bishop
+Moves any number of squares diagonally.
+Always stays on the same color.
+
+♞ Knight
+Moves in an L-shape: two squares in one direction, then one perpendicular.
+Can jump over pieces.
+
+♟ Pawn
+Moves forward one square.
+Can move two squares forward on its first move.
+Captures diagonally, not straight.
+Special moves:
+En passant: If an enemy pawn moves two squares forward next to yours, you may capture it as if it moved only one.
+Promotion: If a pawn reaches the opposite end, it must be promoted to a queen, rook, bishop, or knight.
+
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+🛡 Special Moves
+
+🏰 Castling
+A special move involving the king and a rook.
+Conditions:
+Neither the king nor the rook has moved before.
+No pieces between the king and rook.
+The king is not in check, does not pass over a threatened square, and does not end up in check.
+Short castling (king-side): king moves 2 squares to the right.
+Long castling (queen-side): king moves 2 squares to the left.
+
+🎯 Check and Checkmate
+Check: your king is under attack. You must get out of check on your next move.
+You can escape by:
+Moving the king
+Blocking the attack
+Capturing the attacking piece
+Checkmate: your king is in check and cannot escape. You lose the game.
+🕊 Stalemate and Draws
+A draw happens if:
+
+The current player has no legal moves and is not in check (stalemate).
+Insufficient material to checkmate (e.g. king vs king, or king + bishop vs king).
+Threefold repetition of the same position.
+50-move rule: if 50 consecutive moves occur with no capture or pawn move.
+🏁 Winning the Game
+
+You win by checkmating your opponent.
+You can also win if your opponent resigns.
+A game can end in a draw.
