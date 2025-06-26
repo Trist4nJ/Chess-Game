@@ -121,8 +121,6 @@ class Game:
                         print("Illegal move: there is a pin")
                         continue
 
-                    if self.board.move_piece(piece, end_x, end_y, self):
-                        self.board.print_board()
                         self.switch_turn()
                 else:
                     print("Invalid move.")
@@ -133,3 +131,4 @@ class Game:
             command = input("Type 'q' to quit or press Enter to continue: ")
             if command.lower() == 'q':
                 self.game_started = False
+        print("Game ended!")
