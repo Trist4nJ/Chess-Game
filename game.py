@@ -4,11 +4,94 @@ from pieces import *
 class Game:
     def __init__(self):
         self.turn = 'white'
+        self.en_passant_target = None  # tuple ou None
         self.game_started = False
         self.board = Board()
 
     def switch_turn(self):
         self.turn = 'black' if self.turn == 'white' else 'white'
+
+    def is_check(self, color):
+        king_x = None
+        king_y = None
+
+        for x in range(8):
+            for y in range(8):
+                if isinstance(self.board.board[x][y], King) and self.board.board[x][y].color == color:
+                    king_x = x
+                    king_y = y
+
+        return self.board.is_square_attacked(king_x, king_y, color)
+
+    def is_checkmate(self, color):
+        if not self.is_check(color):
+            return False
+
+        for i in range(8):
+            for j in range(8):
+                piece = self.board.board[i][j]
+                if piece != '.' and piece.color == color:
+                    for x in range(8):
+                        for y in range(8):
+                            if piece.is_valid_move(x, y, self.board.board):
+                                # Simule le coup et vérifie si le roi est toujours en échec
+                                if not self.simulate_move(piece, x, y):
+                                    return False  # Au moins un coup valide qui sort de l'échec
+        return True
+
+    def is_stalemate(self, color):
+        if self.is_check(color):
+            return False  # Ce n'est pas un pat si le joueur est en échec
+
+        for i in range(8):
+            for j in range(8):
+                piece = self.board.board[i][j]
+                if piece != '.' and piece.color == color:
+                    for x in range(8):
+                        for y in range(8):
+                            if piece.is_valid_move(x, y, self.board.board):
+                                if not self.simulate_move(piece, x, y):
+                                    return False  # Il existe au moins un coup légal
+        return True  # Aucun coup légal et pas en échec → pat
+
+    def simulate_move(self, piece, new_x, new_y):
+        # Sauvegarde l’état initial
+        original_x, original_y = piece.x, piece.y
+        captured_piece = self.board.board[new_x][new_y]
+
+        # Simule le coup
+        self.board.board[new_x][new_y] = piece
+        self.board.board[original_x][original_y] = '.'
+        piece.x, piece.y = new_x, new_y
+
+        # Vérifie si le roi est toujours en échec
+        in_check = self.is_check(piece.color)
+
+        # Restaure l’état initial
+        piece.x, piece.y = original_x, original_y
+        self.board.board[original_x][original_y] = piece
+        self.board.board[new_x][new_y] = captured_piece
+
+        return in_check
+
+    def would_cause_check(self, piece, new_x, new_y):
+        # Sauvegarder la position actuelle
+        original_x, original_y = piece.x, piece.y
+        captured_piece = self.board.board[new_x][new_y]
+
+        # Simuler le mouvement
+        self.board.board[original_x][original_y] = '.'
+        self.board.board[new_x][new_y] = piece
+        piece.x, piece.y = new_x, new_y
+
+        in_check = self.is_check(piece.color)
+
+        # Annuler le mouvement
+        self.board.board[original_x][original_y] = piece
+        self.board.board[new_x][new_y] = captured_piece
+        piece.x, piece.y = original_x, original_y
+
+        return in_check
 
     def launch_game(self):
         self.game_started = True
@@ -34,16 +117,19 @@ class Game:
                     continue
 
                 if piece.is_valid_move(end_x, end_y, self.board.board):
-                    self.board.move_piece(piece, end_x, end_y)
-                    self.board.print_board()
-                    self.switch_turn()
+                    if self.would_cause_check(piece, end_x, end_y):
+                        print("Illegal move: there is a pin")
+                        continue
+
+                    if self.board.move_piece(piece, end_x, end_y, self):
+                        self.board.print_board()
+                        self.switch_turn()
                 else:
                     print("Invalid move.")
 
             except (ValueError, IndexError):
                 print("Invalid input. Please enter two numbers between 0 and 7.")
 
-            # Pour tester : sortir du jeu manuellement
             command = input("Type 'q' to quit or press Enter to continue: ")
             if command.lower() == 'q':
                 self.game_started = False

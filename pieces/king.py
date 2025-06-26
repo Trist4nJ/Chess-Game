@@ -10,7 +10,7 @@ class King(Piece):
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
                 if dx == 0 and dy == 0:
-                    continue  # on saute le déplacement nul (le roi ne reste pas sur place)
+                    continue  # on saute le déplacement nul
                 moves.append((dx, dy))
 
         destination = board[new_x][new_y]

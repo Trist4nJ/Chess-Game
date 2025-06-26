@@ -1,5 +1,4 @@
-from pieces import Pawn, King, Queen, Knight, Bishop, Rook, Piece
-from typing import List, Union
+from pieces import Queen, Rook, Bishop, Knight, Pawn, King
 
 class Board:
     def __init__(self):
@@ -42,19 +41,40 @@ class Board:
                 print(self.board[i][j], end=' ')
             print()
 
-    def move_piece(self, piece, new_x, new_y):
+
+    def move_piece(self, piece, new_x, new_y, game=None):
+        if game and game.would_cause_check(piece, new_x, new_y):
+            print("Illegal move: there is a pin")
+            return False
+
+        # Déplacement de la pièce
         self.board[new_x][new_y] = piece
         self.board[piece.x][piece.y] = '.'
         piece.x = new_x
         piece.y = new_y
 
+        # Gestion spécifique au pion
         if isinstance(piece, Pawn):
             piece.first_move = False
 
-            # Promotion automatique en dame
+            # Promotion
             if (piece.color == 'white' and new_x == 0) or (piece.color == 'black' and new_x == 7):
-                self.board[new_x][new_y] = Queen(piece.color, new_x, new_y, 'Q' if piece.color == 'white' else 'q')
-                print(f"{piece.color.capitalize()} pawn promoted to Queen!")
+                print("Pawn promotion! Choose a piece:")
+                print("Q - Queen\nR - Rook\nB - Bishop\nN - Knight")
+                choice = input("Enter your choice: ").upper()
+
+                if choice == 'R':
+                    promoted_piece = Rook(piece.color, new_x, new_y, 'R' if piece.color == 'white' else 'r')
+                elif choice == 'B':
+                    promoted_piece = Bishop(piece.color, new_x, new_y, 'B' if piece.color == 'white' else 'b')
+                elif choice == 'N':
+                    promoted_piece = Knight(piece.color, new_x, new_y, 'N' if piece.color == 'white' else 'n')
+                else:
+                    promoted_piece = Queen(piece.color, new_x, new_y, 'Q' if piece.color == 'white' else 'q')
+
+                self.board[new_x][new_y] = promoted_piece
+
+        return True
 
     def is_square_attacked(self, x, y, color):
         for row in self.board:
