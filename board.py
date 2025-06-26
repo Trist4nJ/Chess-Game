@@ -43,11 +43,18 @@ class Board:
             print()
 
     def move_piece(self, piece, new_x, new_y):
-        if piece.is_valid_move(new_x, new_y, self.board):
-           self.board[new_x][new_y] = piece
-           self.board[piece.x][piece.y] = '.'
-           piece.x = new_x
-           piece.y = new_y
+        self.board[new_x][new_y] = piece
+        self.board[piece.x][piece.y] = '.'
+        piece.x = new_x
+        piece.y = new_y
+
+        if isinstance(piece, Pawn):
+            piece.first_move = False
+
+            # Promotion automatique en dame
+            if (piece.color == 'white' and new_x == 0) or (piece.color == 'black' and new_x == 7):
+                self.board[new_x][new_y] = Queen(piece.color, new_x, new_y, 'Q' if piece.color == 'white' else 'q')
+                print(f"{piece.color.capitalize()} pawn promoted to Queen!")
 
     def is_square_attacked(self, x, y, color):
         for row in self.board:
