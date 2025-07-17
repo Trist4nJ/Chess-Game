@@ -4,7 +4,8 @@ class King(Piece):
     def __init__(self, color, x, y, name=None):
         super().__init__(color, x, y, name)
 
-    def is_valid_move(self, new_x, new_y, board):
+    def is_valid_move(self, new_x, new_y, board_obj):
+        board = board_obj.board
         moves = []
 
         for dx in [-1, 0, 1]:
@@ -18,7 +19,7 @@ class King(Piece):
         dy = new_y - self.y
 
         if (dx, dy) in moves and (destination == '.' or destination.color != self.color):
-            if not board.is_square_attacked(new_x, new_y, self.color):
+            if not board_obj.is_square_attacked(new_x, new_y, self.color):
                 return True
 
         return False

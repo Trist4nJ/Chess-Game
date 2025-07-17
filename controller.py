@@ -42,7 +42,7 @@ class ChessApp:
                 f.close()
 
             elif choice == 3:
-                print("Hi! My name is Omega, the very first AI of this software! Let's start with black pieces...\n")
+                print("This feature will be implemented soon!\n")
 
             elif choice == 4:
                 print("Thanks for playing! See you soon! 😁")

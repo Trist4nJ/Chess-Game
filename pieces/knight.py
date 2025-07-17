@@ -4,7 +4,8 @@ class Knight(Piece):
     def __init__(self, color, x, y, name=None):
         super().__init__(color, x, y, name)
 
-    def is_valid_move(self, new_x, new_y, board):
+    def is_valid_move(self, new_x, new_y, board_obj):
+        board = board_obj.board
         dx = abs(self.x - new_x)
         dy = abs(self.y - new_y)
 

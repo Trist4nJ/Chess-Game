@@ -33,15 +33,14 @@ class Game:
                 if piece != '.' and piece.color == color:
                     for x in range(8):
                         for y in range(8):
-                            if piece.is_valid_move(x, y, self.board.board):
-                                # Simule le coup et vérifie si le roi est toujours en échec
+                            if piece.is_valid_move(x, y, self.board):
                                 if not self.simulate_move(piece, x, y):
-                                    return False  # Au moins un coup valide qui sort de l'échec
+                                    return False
         return True
 
     def is_stalemate(self, color):
         if self.is_check(color):
-            return False  # Ce n'est pas un pat si le joueur est en échec
+            return False
 
         for i in range(8):
             for j in range(8):
@@ -49,10 +48,10 @@ class Game:
                 if piece != '.' and piece.color == color:
                     for x in range(8):
                         for y in range(8):
-                            if piece.is_valid_move(x, y, self.board.board):
+                            if piece.is_valid_move(x, y, self.board):
                                 if not self.simulate_move(piece, x, y):
-                                    return False  # Il existe au moins un coup légal
-        return True  # Aucun coup légal et pas en échec → pat
+                                    return False
+        return True
 
     def simulate_move(self, piece, new_x, new_y):
         # Sauvegarde l’état initial
@@ -116,7 +115,7 @@ class Game:
                     print("This is not your piece.")
                     continue
 
-                if piece.is_valid_move(end_x, end_y, self.board.board):
+                if piece.is_valid_move(end_x, end_y, self.board):
                     if self.would_cause_check(piece, end_x, end_y):
                         print("Illegal move: there is a pin")
                         continue
@@ -130,7 +129,13 @@ class Game:
             except (ValueError, IndexError):
                 print("Invalid input. Please enter two numbers between 0 and 7.")
 
+            if self.is_checkmate(self.turn):
+                if self.turn == "white":
+                    print("Checkmate! Black wins")
+                else:
+                    print("Checkmate! White wins")
+                break
             command = input("Type 'q' to quit or press Enter to continue: ")
             if command.lower() == 'q':
                 self.game_started = False
-        print("Game ended!")
+        print("Game ended")

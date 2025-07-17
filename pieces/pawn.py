@@ -5,7 +5,8 @@ class Pawn(Piece):
         super().__init__(color, x, y, name)
         self.first_move = True
 
-    def is_valid_move(self, new_x, new_y, board):
+    def is_valid_move(self, new_x, new_y, board_obj):
+        board = board_obj.board
         dx = new_x - self.x
         dy = new_y - self.y
 

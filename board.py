@@ -80,6 +80,6 @@ class Board:
         for row in self.board:
             for piece in row:
                 if piece != '.' and piece.color != color:
-                    if piece.is_valid_move(x, y, self.board):
+                    if piece.is_valid_move(x, y, self):
                         return True
         return False
