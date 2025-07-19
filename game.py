@@ -117,7 +117,7 @@ class Game:
 
                 if piece.is_valid_move(end_x, end_y, self.board):
                     if self.would_cause_check(piece, end_x, end_y):
-                        print("Illegal move: there is a pin")
+                        print("Illegal move: there is a pin or the king is in check")
                         continue
 
                     if self.board.move_piece(piece, end_x, end_y, self):
@@ -135,6 +135,10 @@ class Game:
                 else:
                     print("Checkmate! White wins")
                 break
+
+            if self.is_stalemate(self.turn):
+                print("Stalemate!")
+
             command = input("Type 'q' to quit or press Enter to continue: ")
             if command.lower() == 'q':
                 self.game_started = False
