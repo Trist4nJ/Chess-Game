@@ -43,13 +43,12 @@ def evaluation(board_obj):
                 mobility_bonus = 0.1 * mobility
 
                 square_bonus = square_values[i][j]
-                base = pieces_values[piece.name]
 
                 if piece.name.lower() == 'k':
                     # Pénalisation de position centrale du roi
                     square_bonus *= king_position_penalty[i][j]
 
-                global_score += base * square_bonus + (mobility_bonus if piece.color == 'white' else -mobility_bonus)
+                global_score += pieces_values[piece.name] * square_bonus + (mobility_bonus if piece.color == 'white' else -mobility_bonus)
 
     return round(global_score, 2)
 
