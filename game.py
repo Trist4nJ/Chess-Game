@@ -1,5 +1,6 @@
 from board import *
 from pieces import *
+from AI_player import *
 
 class Game:
     def __init__(self):
@@ -142,4 +143,71 @@ class Game:
             command = input("Type 'q' to quit or press Enter to continue: ")
             if command.lower() == 'q':
                 self.game_started = False
+        print("Game ended")
+
+
+    def launch_game_vs_ai(self):
+        self.game_started = True
+        self.board.print_board()
+
+        while self.game_started:
+            print(f"\n{self.turn.capitalize()}'s turn")
+
+            if self.turn == 'white':
+                try:
+                    start = input("Enter the coordinates of the piece to move (e.g. '6 4'): ")
+                    end = input("Enter the destination coordinates (e.g. '4 4'): ")
+                    start_x, start_y = map(int, start.split())
+                    end_x, end_y = map(int, end.split())
+
+                    piece = self.board.board[start_x][start_y]
+
+                    if piece == '.':
+                        print("No piece on this square.")
+                        continue
+
+                    if piece.color != self.turn:
+                        print("This is not your piece.")
+                        continue
+
+                    if piece.is_valid_move(end_x, end_y, self.board):
+                        if self.would_cause_check(piece, end_x, end_y):
+                            print("Illegal move: there is a pin or the king is in check")
+                            continue
+
+                        if self.board.move_piece(piece, end_x, end_y, self):
+                            self.board.print_board()
+                            self.switch_turn()
+                    else:
+                        print("Invalid move.")
+
+                except (ValueError, IndexError):
+                    print("Invalid input. Please enter two numbers between 0 and 7.")
+
+            else:
+                print("AI is thinking...")
+                move = get_best_move(self.board)
+                if move:
+                    piece, x, y = move
+                    self.board.move_piece(piece, x, y, self)
+                    print(f"AI moved {piece.name} to {x}, {y}")
+                    self.board.print_board()
+                    self.switch_turn()
+                else:
+                    print("AI has no legal moves.")
+                    self.game_started = False
+
+            if self.is_checkmate(self.turn):
+                print(f"Checkmate! {'White' if self.turn == 'black' else 'Black'} wins!")
+                break
+
+            if self.is_stalemate(self.turn):
+                print("Stalemate!")
+                break
+
+            if self.turn == 'white':
+                command = input("Type 'q' to quit or press Enter to continue: ")
+                if command.lower() == 'q':
+                    self.game_started = False
+
         print("Game ended")

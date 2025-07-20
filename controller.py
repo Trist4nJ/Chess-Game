@@ -42,7 +42,8 @@ class ChessApp:
                 f.close()
 
             elif choice == 3:
-                print("This feature will be implemented soon!\n")
+                self.game = Game()
+                self.game.launch_game_vs_ai()
 
             elif choice == 4:
                 print("Thanks for playing! See you soon! 😁")
