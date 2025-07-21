@@ -93,6 +93,16 @@ class Game:
 
         return in_check
 
+    def algebraic_to_matrix(self, square: str):
+        col = ord(square[0].lower()) - ord('a')  # a → 0, b → 1
+        row = 8 - int(square[1])  # 8 → 0, 1 → 7
+        return row, col
+
+    def matrix_to_algebraic(self, row: int, col: int):
+        letter = chr(col + ord('a'))  # 0 → a, 1 → b
+        number = str(8 - row)  # 0 → 8, 7 → 1
+        return letter + number
+
     def launch_game(self):
         self.game_started = True
         self.board.print_board()
@@ -101,10 +111,10 @@ class Game:
             print(f"\n{self.turn.capitalize()}'s turn")
 
             try:
-                start = input("Enter the coordinates of the piece to move (e.g. '6 4'): ")
-                end = input("Enter the destination coordinates (e.g. '4 4'): ")
-                start_x, start_y = map(int, start.split())
-                end_x, end_y = map(int, end.split())
+                start = input("Enter the coordinates of the piece to move (e.g. 'e2'): ")
+                end = input("Enter the destination coordinates (e.g. 'e4'): ")
+                start_x, start_y = self.algebraic_to_matrix(start.strip().lower())
+                end_x, end_y = self.algebraic_to_matrix(end.strip().lower())
 
                 piece = self.board.board[start_x][start_y]
 
@@ -128,7 +138,7 @@ class Game:
                     print("Invalid move.")
 
             except (ValueError, IndexError):
-                print("Invalid input. Please enter two numbers between 0 and 7.")
+                print("Invalid input. Please enter correct coordinates.")
 
             if self.is_checkmate(self.turn):
                 if self.turn == "white":
@@ -155,10 +165,10 @@ class Game:
 
             if self.turn == 'white':
                 try:
-                    start = input("Enter the coordinates of the piece to move (e.g. '6 4'): ")
-                    end = input("Enter the destination coordinates (e.g. '4 4'): ")
-                    start_x, start_y = map(int, start.split())
-                    end_x, end_y = map(int, end.split())
+                    start = input("Enter the coordinates of the piece to move (e.g. 'e2'): ")
+                    end = input("Enter the destination coordinates (e.g. 'e4'): ")
+                    start_x, start_y = self.algebraic_to_matrix(start.strip().lower())
+                    end_x, end_y = self.algebraic_to_matrix(end.strip().lower())
 
                     piece = self.board.board[start_x][start_y]
 
@@ -186,11 +196,12 @@ class Game:
 
             else:
                 print("AI is thinking...")
+                print(f"Evaluation: {evaluation(self.board)}")
                 move = get_best_move(self.board)
                 if move:
                     piece, x, y = move
                     self.board.move_piece(piece, x, y, self)
-                    print(f"AI moved {piece.name} to {x}, {y}")
+                    print(f"AI moved {piece.name} to {self.matrix_to_algebraic(x, y)}")
                     self.board.print_board()
                     self.switch_turn()
                 else:

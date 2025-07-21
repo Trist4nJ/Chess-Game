@@ -32,11 +32,14 @@ class Board:
     def print_board(self):
         print()
         print(end='  ')
+
         for x in range(8):
-            print(x, end= ' ')
+            print(chr(x + 65), end= ' ')
         print()
+
         for i in range(8):
-            print(i, end= ' ')
+            display_row = 8 - i
+            print(display_row, end= ' ')
             for j in range(8):
                 print(self.board[i][j], end=' ')
             print()
