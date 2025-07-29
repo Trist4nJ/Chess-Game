@@ -6,7 +6,8 @@ class Game:
     def __init__(self):
         self.turn = 'white'
         self.en_passant_target = None  # tuple ou None
-        self.game_started = False
+        self.white_king_moved = False
+        self.black_king_moved = False
         self.board = Board()
 
     def switch_turn(self):
@@ -103,18 +104,159 @@ class Game:
         number = str(8 - row)  # 0 → 8, 7 → 1
         return letter + number
 
+    def is_king_side_castling_possible(self, board_obj, color):
+        board = board_obj.board
+        if color == 'white':
+            if not self.white_king_moved:
+                if board[7][5] != '.' and board[7][6] != '.':
+                    return False
+                if board[7][7] == '.' or board[7][4] == '.':
+                    return False
+                if self.is_check(color):
+                    return False
+                if board_obj.is_square_attacked(7, 5, color) or board_obj.is_square_attacked(7, 6, color):
+                    return False
+        else:
+            if not self.black_king_moved:
+                if board[0][5] != '.' and board[0][6] != '.':
+                    return False
+                if board[0][4] == '.' or board[0][7] == '.':
+                    return False
+                if self.is_check(color):
+                    return False
+                if board_obj.is_square_attacked(0, 5, color) or board_obj.is_square_attacked(0, 6, color):
+                    return False
+        return True
+
+    def king_side_castling(self, board_obj, color):
+        board = board_obj.board
+
+        if color == 'white':
+            king = board[7][4]
+            rook = board[7][7]
+
+            king.x = 7
+            king.y = 6
+            rook.x = 7
+            rook.y = 5
+
+            board[7][4] = '.'
+            board[7][5] = rook
+            board[7][6] = king
+            board[7][7] = '.'
+            self.white_king_moved = True
+
+        else:
+            king = board[0][4]
+            rook = board[0][7]
+
+            king.x = 0
+            king.y = 6
+            rook.x = 0
+            rook.y = 5
+
+            board[0][4] = '.'
+            board[0][5] = rook
+            board[0][6] = king
+            board[0][7] = '.'
+            self.black_king_moved = True
+
+    def is_queen_side_castling_possible(self, board_obj, color):
+        board = board_obj.board
+        if color == 'white':
+            if not self.white_king_moved:
+                if board[7][1] != '.' and board[7][2] != '.' and board[7][3] != '.':
+                    return False
+                if board[7][0] == '.' or board[7][4] == '.':
+                    return False
+                if self.is_check(color):
+                    return False
+                if board_obj.is_square_attacked(7, 1, color) or board_obj.is_square_attacked(7, 2,color) or board_obj.is_square_attacked(7, 3, color):
+                    return False
+        else:
+            if not self.black_king_moved:
+                if board[0][1] != '.' and board[0][2] != '.' and board[0][3] != '.':
+                    return False
+                if board[0][0] == '.' or board[0][4] == '.':
+                    return False
+                if self.is_check(color):
+                    return False
+                if board_obj.is_square_attacked(0, 1, color) or board_obj.is_square_attacked(0, 2,color) or board_obj.is_square_attacked(0, 3, color):
+                    return False
+        return True
+
+    def queen_side_castling(self, board_obj, color):
+        board = board_obj.board
+
+        if color == 'white':
+            king = board[7][4]
+            rook = board[7][0]
+
+            king.x = 7
+            king.y = 2
+            rook.x = 7
+            rook.y = 3
+
+            board[7][0] = '.'
+            board[7][1] = '.'
+            board[7][2] = king
+            board[7][3] = rook
+            board[7][4] = '.'
+            self.white_king_moved = True
+        else:
+            king = board[0][4]
+            rook = board[0][0]
+
+            king.x = 0
+            king.y = 2
+            rook.x = 0
+            rook.y = 3
+
+            board[0][0] = '.'
+            board[0][1] = '.'
+            board[0][2] = king
+            board[0][3] = rook
+            board[0][4] = '.'
+            self.black_king_moved = True
+
+
     def launch_game(self):
-        self.game_started = True
+
+        print("\nTo enter a move, follow this syntax:\n")
+        print("'e2 e4' to move the piece in e2 to e4 or 'KC' for kingside castling)\n")
         self.board.print_board()
 
-        while self.game_started:
+        while True:
             print(f"\n{self.turn.capitalize()}'s turn")
 
+            user_input = input("Enter move: ").strip().upper()
+
+            if user_input == "QUIT":
+                break
+            # King side castling command
+            if user_input == 'KC' and (not self.white_king_moved if self.turn == 'white' else not self.black_king_moved):
+                if self.is_king_side_castling_possible(self.board, self.turn):
+                    self.king_side_castling(self.board, self.turn)
+                    self.board.print_board()
+                    self.switch_turn()
+                else:
+                    print("Kingside castling is not possible.")
+                continue
+
+            # Queen side castling command
+            if user_input == 'QC':
+                if self.is_queen_side_castling_possible(self.board, self.turn):
+                    self.queen_side_castling(self.board, self.turn)
+                    self.board.print_board()
+                    self.switch_turn()
+                else:
+                    print("Queenside castling is not possible.")
+                continue
+
             try:
-                start = input("Enter the coordinates of the piece to move (e.g. 'e2'): ")
-                end = input("Enter the destination coordinates (e.g. 'e4'): ")
-                start_x, start_y = self.algebraic_to_matrix(start.strip().lower())
-                end_x, end_y = self.algebraic_to_matrix(end.strip().lower())
+                start_str, end_str = user_input.split()
+                start_x, start_y = self.algebraic_to_matrix(start_str.lower())
+                end_x, end_y = self.algebraic_to_matrix(end_str.lower())
 
                 piece = self.board.board[start_x][start_y]
 
@@ -132,8 +274,13 @@ class Game:
                         continue
 
                     if self.board.move_piece(piece, end_x, end_y, self):
+                        if piece.name == 'K':
+                            self.white_king_moved = True
+                        if piece.name == 'k':
+                            self.black_king_moved = True
                         self.board.print_board()
                         self.switch_turn()
+
                 else:
                     print("Invalid move.")
 
@@ -150,25 +297,48 @@ class Game:
             if self.is_stalemate(self.turn):
                 print("Stalemate!")
 
-            command = input("Type 'q' to quit or press Enter to continue: ")
-            if command.lower() == 'q':
-                self.game_started = False
         print("Game ended")
 
 
     def launch_game_vs_ai(self):
-        self.game_started = True
+
+        print("\nTo enter a move, follow this syntax:\n")
+        print("'e2 e4' to move the piece in e2 to e4 or 'KC' for kingside castling\n)")
         self.board.print_board()
 
-        while self.game_started:
+        while True:
             print(f"\n{self.turn.capitalize()}'s turn")
 
             if self.turn == 'white':
+                user_input = input("Enter move: ").strip().upper()
+
+                if user_input == "QUIT":
+                    break
+                # King side castling command
+                if user_input == 'KC' and (
+                not self.white_king_moved if self.turn == 'white' else not self.black_king_moved):
+                    if self.is_king_side_castling_possible(self.board, self.turn):
+                        self.king_side_castling(self.board, self.turn)
+                        self.board.print_board()
+                        self.switch_turn()
+                    else:
+                        print("Kingside castling is not possible.")
+                    continue
+
+                # Queen side castling command
+                if user_input == 'QC':
+                    if self.is_queen_side_castling_possible(self.board, self.turn):
+                        self.queen_side_castling(self.board, self.turn)
+                        self.board.print_board()
+                        self.switch_turn()
+                    else:
+                        print("Queenside castling is not possible.")
+                    continue
+
                 try:
-                    start = input("Enter the coordinates of the piece to move (e.g. 'e2'): ")
-                    end = input("Enter the destination coordinates (e.g. 'e4'): ")
-                    start_x, start_y = self.algebraic_to_matrix(start.strip().lower())
-                    end_x, end_y = self.algebraic_to_matrix(end.strip().lower())
+                    start_str, end_str = user_input.split()
+                    start_x, start_y = self.algebraic_to_matrix(start_str.lower())
+                    end_x, end_y = self.algebraic_to_matrix(end_str.lower())
 
                     piece = self.board.board[start_x][start_y]
 
@@ -206,7 +376,7 @@ class Game:
                     self.switch_turn()
                 else:
                     print("AI has no legal moves.")
-                    self.game_started = False
+                    break
 
             if self.is_checkmate(self.turn):
                 print(f"Checkmate! {'White' if self.turn == 'black' else 'Black'} wins!")
@@ -215,10 +385,5 @@ class Game:
             if self.is_stalemate(self.turn):
                 print("Stalemate!")
                 break
-
-            if self.turn == 'white':
-                command = input("Type 'q' to quit or press Enter to continue: ")
-                if command.lower() == 'q':
-                    self.game_started = False
 
         print("Game ended")

@@ -1,8 +1,9 @@
 from .piece import Piece
 
 class Bishop(Piece):
-    def __init__(self, color, x, y, name=None):
-        super().__init__(color, x, y, name)
+    def __init__(self, color, x, y, name=None, skin=None):
+        super().__init__(color, x, y, name, skin)
+        self.value = 3
 
     def is_valid_move(self, new_x, new_y, board_obj):
         board = board_obj.board

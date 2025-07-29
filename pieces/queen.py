@@ -3,8 +3,9 @@ from .rook import Rook
 from .bishop import Bishop
 
 class Queen(Piece):
-    def __init__(self, color, x, y, name=None):
-        super().__init__(color, x, y, name)
+    def __init__(self, color, x, y, name=None, skin=None):
+        super().__init__(color, x, y, name, skin)
+        self.value = 9
 
     def is_valid_move(self, new_x, new_y, board_obj):
         board = board_obj.board
