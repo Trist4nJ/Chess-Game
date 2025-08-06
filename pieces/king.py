@@ -27,6 +27,3 @@ class King(Piece):
 
         return False
 
-
-    def queen_side_castling(self, board_obj, color):
-        pass

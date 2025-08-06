@@ -219,7 +219,6 @@ class Game:
             board[0][4] = '.'
             self.black_king_moved = True
 
-
     def launch_game(self):
 
         print("\nTo enter a move, follow this syntax:\n")
@@ -303,7 +302,7 @@ class Game:
     def launch_game_vs_ai(self):
 
         print("\nTo enter a move, follow this syntax:\n")
-        print("'e2 e4' to move the piece in e2 to e4 or 'KC' for kingside castling\n)")
+        print("'e2 e4' to move the piece in e2 to e4 or 'KC' for kingside castling\n")
         self.board.print_board()
 
         while True:

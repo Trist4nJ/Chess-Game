@@ -11,7 +11,6 @@ pieces_values = {
 
 def evaluation(board_obj):
 
-    # peut etre faire une fonction qui calcule le nombre de cases controlées ----- C'est get_legal_moves en fait
     board = board_obj.board
 
     pawn_values = [
@@ -70,7 +69,7 @@ def evaluation(board_obj):
     ]
 
     king_values = [
-        [600, 600, 0.0, 0.0, 0.0, 500, 600, 600],
+        [-600, -600, -500, 0.0, 0.0, 0, -600, -600],
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -120,7 +119,7 @@ def evaluation(board_obj):
                 global_score += pieces_values[piece.name] + (position_bonus[piece.name.upper()][i][j])
                 if piece.name.upper() == 'P':
                     pass
-    global_score -= get_developped_pieces(board_obj) * 20
+    global_score -= get_developped_black_pieces(board_obj) * 20
 
     get_attacked_squares(board_obj, 'black')
 
@@ -135,7 +134,7 @@ def get_legal_moves(piece, board_obj):
                 legal_moves.append((x, y))
     return legal_moves
 
-def get_developped_pieces(board_obj):
+def get_developped_black_pieces(board_obj):
     board = board_obj.board
     developped_pieces = 0
     for x in range(8):
